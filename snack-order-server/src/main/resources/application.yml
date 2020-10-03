@@ -1,0 +1,41 @@
+spring:
+   profiles:
+      active: dev-6655
+      
+---
+server:
+   port: 6655
+   
+   
+spring:
+   profiles: dev-6655
+   application:
+      name: order-server
+      
+   datasource:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/snack_order?useUnicode=true&serverTimezone=GMT&characterEncoding=utf8&useSSL=true
+      type: com.alibaba.druid.pool.DruidDataSource
+      username: root
+      password: 123456
+   http:
+      encoding:
+         charset: utf-8
+         force: true
+         enabled: true
+         
+
+         
+mybatis:
+   #mapper映射文件在的路径
+   mapper-locations: classpath:mapper/*Mapper.xml
+   # 需要启动别名的类所在的包
+   type-aliases-package: com.zky.snack.order.bean        
+      
+      
+      
+eureka:
+   client:
+      service-url:
+         defaultZone: http://zhangkongyang:123456@127.0.0.1:6611/eureka        
+   

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zky.snack.product.mapper.IGoodsInfoMapper">
+	<insert id="add" parameterType="GoodsInfo">
+		insert into goodsinfo values(0, #{gname}, #{tno}, #{price}, #{intro}, #{balance}, #{pics}, #{unit}, #{qperied}, #{weight}, #{descr}, #{status})
+	</insert>
+	
+	<update id="update" parameterType="GoodsInfo">
+		update goodsinfo set gname=#{gname}, tno=#{tno}, price=#{price}, intro=#{intro}, balance=#{balance}, pics=#{pics}, unit=#{unit}, qperied=#{unit}, weight=#{weight}, descr=#{descr} where gno=#{gno}
+	</update>
+	
+	<select id="findByGid" resultType="GoodsInfo" parameterType="int">
+		select gno, gname, g.tno, tname, price, balance, unit, qperied, weight, g.status, intro, pics, descr from goodsinfo g, goodstype t  where g.tno = t.tno and gno=#{_parameter}
+	</select>
+	
+	<select id="findByPage" resultType="GoodsInfo" parameterType="map">
+		select gno, gname, g.tno, tname, price, balance, unit, qperied, weight, g.status from goodsinfo g, goodstype t where g.tno=t.tno
+		<if test="gname != null and  gname != ''">
+			and gname like concat('%', ?, '%')
+		</if>
+		
+		<if test="tno != null and tno != ''">
+			and g.tno = #{tno}
+		</if>
+		
+		<if test="start != null and start != ''">
+			and balance &gt;= #{start}
+		</if>
+		
+		<if test="end != null and end != ''">
+			and balance &lt;= #{end}
+		</if>
+		 order by gno desc limit #{page}, #{rows}
+	</select>
+	
+	<select id="total" parameterType="map" resultType="int">
+		select count(gno) from goodsinfo
+		<where>
+			<if test="gname != null and gname != ''">
+				and gname like concat('%', ?, '%')
+			</if>
+			
+			<if test="tno != null and tno != ''">
+				and tno=#{tno}
+			</if>
+			
+			<if test="start != null and start != ''">
+				and balance &gt;= #{start}
+			</if>
+			
+			<if test="end != null and end != ''">
+				and balance &lt;= #{end}
+			</if>
+		</where>
+	</select>
+	
+	<select id="finds" resultType="GoodsInfo" parameterType="map">
+		select gno, gname, tno, price, weight, pics pic from goodsinfo where status !=0
+		<if test="tno != null and tno != ''">
+			and tno=#{tno}
+		</if>
+		
+		<if test="gname != null and gname != ''">
+			and gname like concat('%', ?, '%')
+		</if>
+		
+		<if test="sprice != null and sprice != ''">
+			and price &gt;= #{sprice}
+		</if>
+		
+		<if test="eprice != null and eprice != ''">
+			and price &lt;= #{eprice}
+		</if>
+		
+		<choose>
+			<when test="order != null and order != ''">
+				 order by price #{order}
+			</when>
+			<otherwise>
+				order by gno desc
+			</otherwise>
+		</choose>
+		limit #{page}, #{rows}
+	</select>
+	
+	<select id="totals" resultType="int" parameterType="map">
+		select count(gno) from goodsinfo where status !=0
+		<if test="tno != null and tno != ''">
+			 and tno=#{tno}
+		</if>
+		
+		<if test="gname != null and gname != ''">
+			 and gname like concat('%', ?, '%')
+		</if>
+		
+		<if test="sprice != null and sprice != ''">
+			and price &gt;= #{sprice}
+		</if>
+		
+		<if test="eprice != null and eprice != ''">
+			and price &lt;= #{eprice}
+		</if>
+	</select>
+	
+</mapper>
